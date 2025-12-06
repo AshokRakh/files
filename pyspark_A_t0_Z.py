@@ -115,6 +115,8 @@ spark = SparkSession.builder.appName("pyspark_A_to_z").getOrCreate()
 df = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=True,header=True) 
 #df.show(3)
 # df.printSchema()
+#df1 = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=True,header=True) 
+#df1.show(3)
 
 # multiple options 
 # df = spark.read.option("inferSchema",True).option("delimiter",",").csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv") 
@@ -162,11 +164,18 @@ df = df.withColumn("date", to_date("date", "M/d/yyyy"))
 
 #--Get the venues where more than 10 matches have been played.
 
-df4=df.groupby('venue').agg(count('venue').alias('total_match')).orderBy(desc('total_match')).where('total_match >=10')
-df4.show()
+# WF=Window.partitionBy('season').orderBy(desc('total_match'))
 
-print('all command run' \
-'')
+# df4=df.groupby('season','venue').agg(count('venue').alias('total_match')).orderBy(desc('total_match')).withColumn('rank',dense_rank().over(WF)).where('rank >=10')
+# df4.show()
+
+# df4=df.groupby('season','venue').agg(count('venue').alias('total_match')).orderBy(desc('total_match')).withColumn('rank',dense_rank().over(WF))
+# df4.show()
+
+
+
+#df.join(df1,df.id==df1.id,'inner').show()
+
 
 
 
