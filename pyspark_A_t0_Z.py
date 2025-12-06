@@ -162,8 +162,10 @@ df = df.withColumn("date", to_date("date", "M/d/yyyy"))
 
 #--Get the venues where more than 10 matches have been played.
 
-# df4=df.groupby('venue').agg(count('venue').alias('total_match')).orderBy(desc('total_match')).where('total_match >=10')
-# df4.show()
+df4=df.groupby('venue').agg(count('venue').alias('total_match')).orderBy(desc('total_match')).where('total_match >=10')
+df4.show()
+
+print('all command')
 
 
 
