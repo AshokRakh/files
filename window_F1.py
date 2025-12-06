@@ -42,4 +42,3 @@ df= spark.read.csv('C:/Users/Ashok/Desktop/files/Match_Data.csv', header=True ,i
 #     .withColumn("d_rank", dense_rank().over(sp)).where(col("d_rank") <= 1).orderBy(col("season"),col("d_rank")).show()
 
 
-df.groupBy("player_of_match").count().orderBy(desc('count')).show()
