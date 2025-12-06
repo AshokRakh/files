@@ -112,7 +112,7 @@ spark = SparkSession.builder.appName("pyspark_A_to_z").getOrCreate()
 # df.show(3)
 
 #csv with header 
-df = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=True,header=True) 
+# df = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=True,header=True) 
 #df.show(3)
 # df.printSchema()
 #df1 = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=True,header=True) 
@@ -126,7 +126,7 @@ df = spark.read.csv(r"C:\Users\Ashok\Desktop\files\Match_Data.csv",inferSchema=T
 
 #df = df.withColumn('date',df.date.cast('date'))
 
-df = df.withColumn("date", to_date("date", "M/d/yyyy"))
+# df = df.withColumn("date", to_date("date", "M/d/yyyy"))
 
 # df.printSchema()
 
@@ -177,5 +177,36 @@ df = df.withColumn("date", to_date("date", "M/d/yyyy"))
 #df.join(df1,df.id==df1.id,'inner').show()
 
 
+df1 = spark.read.csv(r"C:\Users\Ashok\Desktop\files\emp_data.csv",inferSchema=True,header=True) 
+
+df = spark.read.csv(r"C:\Users\Ashok\Desktop\files\emp_data.csv",inferSchema=True,header=True) 
+#df.show()
+
+# df1=df.filter(col('MGR_ID').isNull()).count()
+# print(df1)
+
+df=df.fillna({'MGR_ID':'677509','Salary':'12000'})
+#df.show()
+wf=Window.partitionBy('LOC').orderBy(desc('Salary'))
+df.withColumn('rank',dense_rank().over(wf)).where('rank<=5').show()
 
 
+df1.createOrReplaceTempView('data')
+
+spark.sql('select FName,LName,Salary,LOC,dense_rank() over(partition By LOC order By Salary desc)as rnk from data order by Salary desc ').show()
+
+
+spark.sql("""
+    SELECT *
+    FROM (
+        SELECT 
+            FName,
+            LName,
+            Salary,
+            LOC,
+            dense_rank() OVER (PARTITION BY LOC ORDER BY Salary DESC) AS rnk
+        FROM data
+    ) t
+    WHERE rnk <= 3
+    ORDER BY LOC, Salary DESC
+""").show()
