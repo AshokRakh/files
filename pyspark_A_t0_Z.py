@@ -198,15 +198,13 @@ spark.sql('select FName,LName,Salary,LOC,dense_rank() over(partition By LOC orde
 
 spark.sql("""
     SELECT *
-    FROM (
-        SELECT 
-            FName,
-            LName,
-            Salary,
-            LOC,
-            dense_rank() OVER (PARTITION BY LOC ORDER BY Salary DESC) AS rnk
-        FROM data
-    ) t
+      FROM (
+    SELECT 
+        FName,
+        LName,
+        Salary,
+        LOC,
+        dense_rank() OVER (PARTITION BY LOC ORDER BY Salary DESC) AS rnk FROM data) t
     WHERE rnk <= 3
     ORDER BY LOC, Salary DESC
 """).show()
