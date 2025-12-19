@@ -208,7 +208,3 @@ spark.sql("""
     WHERE rnk <= 3
     ORDER BY LOC, Salary DESC
 """).show()
-
-
-
-print("Dear Kamalja")
